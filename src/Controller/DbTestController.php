@@ -11,10 +11,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 class DbTestController extends AbstractController
 {
-    #[Route('/db/test', name: 'app_db_test')]
-    public function index(ManagerRegistry $doctrine): Response
+    #[Route('/db/test/fixtures', name: 'app_db_test_fixtures')]
+    public function fixtures(ManagerRegistry $doctrine): Response
     {
         // récupération du repository des catégories
         $repository = $doctrine->getRepository(Category::class);
@@ -57,4 +58,32 @@ class DbTestController extends AbstractController
 
         exit();
     }
-}
+
+    #[Route('/db/test/orm', name: 'app_db_test_orm')]
+    public function orm(ManagerRegistry $doctrine): Response
+    {
+        $repository = $doctrine->getRepository(Tag::class);
+        $tags = $repository->findAll();
+        dump($tags);
+
+        // récupération d'un objet à partir de son id
+        $id = 7;
+        $tag = $repository->find($id);
+        dump($tag);
+
+        // récupération d'un objet à partir de son id
+        $id = 1;
+        $tag = $repository->find($id);
+        dump($tag);
+
+        // récupération de plusieurs objets à partir de son name
+        $tags = $repository->findBy(['name' => 'carné']);
+        dump($tags);
+
+        // récupération d'un' objet à partir de son name
+        $tag = $repository->findOneBy(['name' => 'carné']);
+        dump($tag);
+
+        exit();
+    }
+    }
