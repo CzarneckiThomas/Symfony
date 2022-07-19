@@ -11,7 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-
 class DbTestController extends AbstractController
 {
     #[Route('/db/test/fixtures', name: 'app_db_test_fixtures')]
@@ -62,14 +61,12 @@ class DbTestController extends AbstractController
     #[Route('/db/test/orm', name: 'app_db_test_orm')]
     public function orm(ManagerRegistry $doctrine): Response
     {
+        // récupération du repository de l'entité Tag
         $repository = $doctrine->getRepository(Tag::class);
+
+        // récupération de tous les objets de type Tag
         $tags = $repository->findAll();
         dump($tags);
-
-        // récupération d'un objet à partir de son id
-        $id = 7;
-        $tag = $repository->find($id);
-        dump($tag);
 
         // récupération d'un objet à partir de son id
         $id = 1;
@@ -80,10 +77,41 @@ class DbTestController extends AbstractController
         $tags = $repository->findBy(['name' => 'carné']);
         dump($tags);
 
-        // récupération d'un' objet à partir de son name
+        // récupération d'un objet à partir de son name
         $tag = $repository->findOneBy(['name' => 'carné']);
+        dump($tag);
+
+        // récupération de l'Entity Manager
+        $manager = $doctrine->getManager();
+
+        if ($tag) {
+            // suppression d'un objet
+            $manager->remove($tag);
+            $manager->flush();
+        }
+
+        // récupération d'un objet à partir de son id
+        $id = 7;
+        $tag = $repository->find($id);
+        dump($tag->getName());
+
+        // modification d'un objet
+        $tag->setName('Foo bar baz');
+        dump($tag->getName());
+
+        // enregistrement de la modification dans la BDD
+        $manager->flush();
+
+        // création d'un nouvel objet
+        $tag = new Tag();
+        $tag->setName('le dernier tag');
+        dump($tag);
+
+        // demande d'enregistrement de l'objet dans la BDD
+        $manager->persist($tag);
+        $manager->flush();
         dump($tag);
 
         exit();
     }
-    }
+}
