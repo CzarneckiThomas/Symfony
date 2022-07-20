@@ -6,6 +6,10 @@ use App\Entity\Article;
 use App\Entity\Category;
 use App\Entity\Page;
 use App\Entity\Tag;
+use App\Repository\ArticleRepository;
+use App\Repository\EditorRepository;
+use App\Repository\UserRepository;
+use App\Repository\WriterRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -111,6 +115,45 @@ class DbTestController extends AbstractController
         $manager->persist($tag);
         $manager->flush();
         dump($tag);
+
+        exit();
+    }
+
+    #[Route('/db/test/repository', name: 'app_db_test_repository')]
+    public function repository(
+        ArticleRepository $articleRepository,
+        EditorRepository $editorRepository,
+        UserRepository $userRepository,
+        WriterRepository $writerRepository
+    ): Response
+    {
+        $articles = $articleRepository->findAllSorted();
+        dump($articles);
+
+        $articles = $articleRepository->findByKeyword('plat');
+        dump($articles);
+
+        $writer = $writerRepository->find(1);
+        $user = $writer->getUser();
+        // force doctrine à lancer le lazy loading
+        $user->getEmail();
+        dump($user);
+
+        $editor = $editorRepository->find(1);
+        $user = $editor->getUser();
+        // force doctrine à lancer le lazy loading
+        $user->getEmail();
+        dump($user);
+
+        $user1 = $userRepository->find(1);
+        // force doctrine à lancer le lazy loading
+        $user1->getEmail();
+        dump($user1);
+
+        $user2 = $userRepository->find(2);
+        // force doctrine à lancer le lazy loading
+        $user2->getEmail();
+        dump($user2);
 
         exit();
     }
