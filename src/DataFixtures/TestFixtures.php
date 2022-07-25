@@ -88,7 +88,7 @@ class TestFixtures extends Fixture
             [
                 'title' => 'Boeuf bourguignon',
                 'body' => 'Un plat français typique',
-                'published_at' => DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2022-07-01 09:00:00'),
+                'published_at' => DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2022-06-30 09:00:00'),
                 'category' => $categories[0],
                 'tags' => [$tags[2]],
             ],
@@ -127,16 +127,17 @@ class TestFixtures extends Fixture
             $article->setTitle($faker->sentence());
             $article->setBody($faker->paragraph(6));
 
-            // genere une date aleatoire 90% du temp ou renvoie une valeur nule 10% du temp
+            // génère une date aléatoire 90% du temps
+            // ou renvoie une valeur nulle 10% du temps
             $date = $faker->optional($weight = 0.9)->dateTimeBetween('-6 month', '+6 month');
 
-        if ($date) {
-            // format : YYYY-mm-dd HH:ii:ss
-            $date = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', "2022-{$date->format('m-d H:i:s')}");
-            // si la gestion de la date est trop compliquée, voici une alternative mais l'année changera en fonction de quand vous lancer le chargement des fixtures
-            // $date = $faker->dateTimeThisYear();
-            // $date = DateTimeImmutable::createFromInterface($date);
-        }
+            if ($date) {
+                // format : YYYY-mm-dd HH:ii:ss
+                $date = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', "2022-{$date->format('m-d H:i:s')}");
+                // si la gestion de la date est trop compliquée, voici une alternative mais l'année changera en fonction de quand vous lancer le chargement des fixtures
+                // $date = $faker->dateTimeThisYear();
+                // $date = DateTimeImmutable::createFromInterface($date);
+            }
 
             $article->setPublishedAt($date);
 
