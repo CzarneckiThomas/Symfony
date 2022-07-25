@@ -2,7 +2,10 @@
 
 namespace App\Repository;
 
+use DateTime;
+use DateTimeInterval;
 use App\Entity\Article;
+
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -42,6 +45,22 @@ class ArticleRepository extends ServiceEntityRepository
    /**
     * @return Article[] Returns an array of Article objects
     */
+   public function findByKeyword($keyword): array
+   {
+       return $this->createQueryBuilder('a')
+           ->andWhere('a.title LIKE :keyword')
+           ->orWhere('a.body LIKE :keyword')
+           ->setParameter('keyword', "%{$keyword}%")
+           ->orderBy('a.title', 'ASC')
+           ->orderBy('a.published_at', 'ASC')
+           ->getQuery()
+           ->getResult()
+       ;
+   }
+
+   /**
+    * @return Article[] Returns an array of Article objects
+    */
    public function findAllSorted(): array
    {
        return $this->createQueryBuilder('a')
@@ -51,19 +70,36 @@ class ArticleRepository extends ServiceEntityRepository
        ;
    }
 
-
    /**
     * @return Article[] Returns an array of Article objects
     */
-   public function findByKeyword($keyword): array
+   public function findByPublishedAtIsNull(): array
    {
        return $this->createQueryBuilder('a')
-           ->andWhere('a.title LIKE :keyword')
-           ->orWhere('a.body LIKE :keyword')
-
-           ->setParameter('keyword', "%{$keyword}%")
+           ->andWhere('a.published_at IS NULL')
            ->orderBy('a.title', 'ASC')
-           ->orderBy('a.published_at', 'ASC')
+           ->orderBy('a.body', 'ASC')
+           ->getQuery()
+           ->getResult()
+       ;
+   }
+
+      /**
+    * @return Article[] Returns an array of Article objects
+    */
+   public function findByPublishedAtBefore(\DateTime $date): array
+   {
+       //creation d'un interval de 1 jour
+       $interval = DateTimeInterval::createFromDateString('P1D');
+
+       //Ajout d'un jour a la date
+       $date = $date->add($interval);
+       
+       return $this->createQueryBuilder('a')
+           ->andWhere('a.published_at <= :date')
+           ->setParameter('date', $date->format('Y-m-d 00:00:00'))
+           ->orderBy('a.title', 'ASC')
+           ->orderBy('a.body', 'ASC') 
            ->getQuery()
            ->getResult()
        ;

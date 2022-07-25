@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\Article;
 use App\Entity\Category;
 use App\Entity\Page;
@@ -154,6 +155,27 @@ class DbTestController extends AbstractController
         // force doctrine à lancer le lazy loading
         $user2->getEmail();
         dump($user2);
+
+        $editor = $editorRepository->findByUser($user1);
+        dump($editor);
+        $editor = $editorRepository->findByUser($user2);
+        dump($editor);
+
+        $writer = $writerRepository->findByUser($user1);
+        dump($writer);
+        $writer = $writerRepository->findByUser($user2);
+        dump($writer);
+
+        $role = 'ROLE_WRITER';
+        $users = $userRepository->findByRole($role);
+        dump($users);
+
+        $articles = $articleRepository->findByPublishedAtIsNull();
+        dump($articles);
+
+        $date = \DateTime::createFromFormat('Y-m-d H:i:s', '2022-06-30 00:00:00');
+        $artciles = $articleRepository->findByPublishedAtBefore($date);
+        dump($articles);
 
         exit();
     }

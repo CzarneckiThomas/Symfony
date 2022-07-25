@@ -2,26 +2,29 @@
 
 namespace App\Repository;
 
-use App\Entity\Editer;
+use App\Entity\Editor;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Editer>
+ * @extends ServiceEntityRepository<Editor>
  *
- * @method Editer|null find($id, $lockMode = null, $lockVersion = null)
- * @method Editer|null findOneBy(array $criteria, array $orderBy = null)
- * @method Editer[]    findAll()
- * @method Editer[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Editor|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Editor|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Editor[]    findAll()
+ * @method Editor[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class EditerRepository extends ServiceEntityRepository
+class EditorRepository extends ServiceEntityRepository
 {
+    use ProfileTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Editer::class);
+        parent::__construct($registry, Editor::class);
     }
 
-    public function add(Editer $entity, bool $flush = false): void
+    public function add(Editor $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +33,7 @@ class EditerRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Editer $entity, bool $flush = false): void
+    public function remove(Editor $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -39,8 +42,13 @@ class EditerRepository extends ServiceEntityRepository
         }
     }
 
+    public function findByUser(User $user): ?Editor
+    {
+        return $this->__findByUser($user);
+    }
+
 //    /**
-//     * @return Editer[] Returns an array of Editer objects
+//     * @return Editor[] Returns an array of Editor objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +62,7 @@ class EditerRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Editer
+//    public function findOneBySomeField($value): ?Editor
 //    {
 //        return $this->createQueryBuilder('e')
 //            ->andWhere('e.exampleField = :val')

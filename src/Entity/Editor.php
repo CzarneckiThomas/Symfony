@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\EditerRepository;
+use App\Repository\EditorRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: EditerRepository::class)]
-class Editer
+#[ORM\Entity(repositoryClass: EditorRepository::class)]
+class Editor
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
