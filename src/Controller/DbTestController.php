@@ -160,6 +160,7 @@ class DbTestController extends AbstractController
         dump($editor);
         $editor = $editorRepository->findByUser($user2);
         dump($editor);
+        
 
         $writer = $writerRepository->findByUser($user1);
         dump($writer);
