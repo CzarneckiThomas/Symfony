@@ -77,29 +77,30 @@ class ArticleType extends AbstractType
                     'class' => 'radios-with-scroll',
                 ],
             ])
-            ->add('writer', EntityType::class, [
-                // looks for choices from this entity
-                'class' => Writer::class,
+            // @TODO bug a corriger : Given object is not an instance of the class this property was declared in
+            // ->add('writer', EntityType::class, [
+            //     // looks for choices from this entity
+            //     'class' => Writer::class,
 
-                // uses the User.username property as the visible option string
-                'choice_label' => function (Writer $object) {
-                    return "{$object->getUser()->getEmail()} ({$object->getUser()->getId()})";
-                },
+            //     // uses the User.username property as the visible option string
+            //     'choice_label' => function (Writer $object) {
+            //         return "{$object->getUser()->getEmail()} ({$object->getUser()->getId()})";
+            //     },
 
-                // used to render a select box, check boxes or radios
-                // 'multiple' => true,
-                'expanded' => true,
+            //     // used to render a select box, check boxes or radios
+            //     // 'multiple' => true,
+            //     'expanded' => true,
 
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('w')
-                        ->join('w.user', 'u')
-                        ->orderBy('u.email', 'ASC');
-                },
+            //     'query_builder' => function (EntityRepository $er) {
+            //         return $er->createQueryBuilder('w')
+            //             ->join('w.user', 'u')
+            //             ->orderBy('u.email', 'ASC');
+            //     },
 
-                'attr' => [
-                    'class' => 'radios-with-scroll',
-                ],
-            ])
+            //     'attr' => [
+            //         'class' => 'radios-with-scroll',
+            //     ],
+            // ])
         ;
     }
 
