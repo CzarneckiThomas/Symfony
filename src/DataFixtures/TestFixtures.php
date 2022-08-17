@@ -108,6 +108,7 @@ class TestFixtures extends Fixture
             ],
         ];
 
+        
         foreach ($articleDatas as $articleData) {
             $article = new Article();
             $article->setTitle($articleData['title']);

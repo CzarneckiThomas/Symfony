@@ -11,7 +11,7 @@
 <ul>
     {% for article in articles %}
     <li>
-        <a href="">{{ article.title }}</a>
+        <a href="{{ path('app_front_article', {'id': article.id }) }}">{{ article.title }}</a>
         {% if article.writer %}
             (auteur : {{ article.writer.user.email }})
         {% endif %}
@@ -21,4 +21,10 @@
 {% else %}
 Il n'y a encore aucun article.
 {% endif %}
+{% endblock %}
+
+{% block body_javascripts %}
+<script>
+console.log('hello front index!');
+</script>
 {% endblock %}
